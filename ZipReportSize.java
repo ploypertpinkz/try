@@ -1,41 +1,34 @@
-import java.io.IOException; 
-import java.nio.file.*;
-import java.io.File; 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-class ZipReportSize{
-
-    ZipFolder zf = new ZipFolder();
-    String folderToZip = "/programmer/words/";
-    String zipName = "/programmer/words/.zip";
-
-    public void setfolderToZip(String folderIn,String zipIn){
-        folderToZip = folderIn;
-        zipName = zipIn;
-        zf.zipFolder(Paths.get(folderToZip), Paths.get(zipName));
+public class ZipReportSize{
+    public static void compress(String dirPath) {
+        final Path sourceDir = Paths.get(dirPath);
+        String zipFileName = dirPath.concat(".zip");
+        try {
+            final ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(zipFileName));
+            Files.walkFileTree(sourceDir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
+                    try {
+                        Path targetFile = sourceDir.relativize(file);
+                        outputStream.putNextEntry(new ZipEntry(targetFile.toString()));
+                        byte[] bytes = Files.readAllBytes(file);
+                        outputStream.write(bytes, 0, bytes.length);
+                        outputStream.closeEntry();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    // Uses java.util.zip to create zip file
-    private void zipFolder(Path sourceFolderPath, Path zipPath) throws Exception {
-        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath.toFile()));
-        Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<Path>() {
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                zos.putNextEntry(new ZipEntry(sourceFolderPath.relativize(file).toString()));
-                Files.copy(file, zos);
-                zos.closeEntry();
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        zos.close();
-    }
-
 }

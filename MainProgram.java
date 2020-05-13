@@ -1,3 +1,5 @@
+
+
 public class MainProgram{
      public static void main(String[] args)
     {
@@ -13,21 +15,23 @@ public class MainProgram{
         //Step 5 ReportSize.java
         ReportSize reportSize = new ReportSize();
         System.out.println("Report Size in Step 5");
-        reportSize.countFolderSize();
+        //reportSize.countFolderSize();
         if(reportSize.countFolderSize() == true) {
             System.out.println("Successfully to Report Size in Step 5");
         }
         
-
         //Step 6 ZipReportSize.java
-        ReportSize reportZipSize = new ReportSize();
+       ReportSize reportZipSize = new ReportSize();
         System.out.println("Report different Zip Size in Step 6");
-        reportZipSize.countFolderZipSize();
+        //reportZipSize.countFolderZipSize();
         if(reportZipSize.countFolderZipSize() == true) {
             System.out.println("Successfully to Report zip Size in Step 6");
         }
 
         //Step 7
+        
+        
+
         //Step 8
           
     }
